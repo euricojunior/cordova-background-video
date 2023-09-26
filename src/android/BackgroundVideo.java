@@ -8,10 +8,13 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import android.media.CamcorderProfile;
+import android.media.EncoderProfiles;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.PluginResult;
 import org.apache.cordova.CordovaWebView;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,11 +24,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class BackgroundVideo extends CordovaPlugin {
     private static final String TAG = "BACKGROUND_VIDEO";
     private static final String ACTION_START_RECORDING = "start";
     private static final String ACTION_STOP_RECORDING = "stop";
+	private static final String ACTION_GET_PROFILES = "getprofiles";
     private static final String FILE_EXTENSION = ".mp4";
     private static final int START_REQUEST_CODE = 0;
 
@@ -76,6 +79,11 @@ public class BackgroundVideo extends CordovaPlugin {
                 Stop();
                 return true;
             }
+			
+			if (ACTION_GET_PROFILES.equalsIgnoreCase(action)) {
+                GetProfiles();
+                return true;
+            }
 
             callbackContext.error(TAG + ": INVALID ACTION");
             return false;
@@ -99,6 +107,19 @@ public class BackgroundVideo extends CordovaPlugin {
             Start(this.requestArgs);
         }
     }
+	
+	private void GetProfiles() throws JSONException {
+		try {
+			CamcorderProfile EncoderProfiles;
+			EncoderProfiles = CamcorderProfile.getAll();
+			
+			final PluginResult result = new PluginResult(PluginResult.Status.OK, EncoderProfiles);
+			callbackContext.success(PluginResult);
+		} catch (Exception e) {
+			Log.e(TAG, "Error during preview create", e);
+			callbackContext.error(TAG + ": " + e.getMessage());
+		}
+	}
 
     private void Start(JSONArray args) throws JSONException {
         // params fileStorage, filename, camera, quality
