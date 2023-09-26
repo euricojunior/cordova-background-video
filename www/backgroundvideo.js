@@ -11,6 +11,9 @@ var backgroundvideo = {
     },
     stop : function(successFunction, errorFunction) {
         cordova.exec(successFunction, errorFunction, 'backgroundvideo','stop', []);
+    },
+	getprofiles : function(successFunction, errorFunction) {
+        cordova.exec(successFunction, errorFunction, 'backgroundvideo','getprofiles', []);
     }
 };
 
